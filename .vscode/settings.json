@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "kernel.h": "c",
+        "init.h": "c",
+        "stddef.h": "c",
+        "linkage.h": "c",
+        "kstrtox.h": "c",
+        "module.h": "c",
+        "compiler.h": "c",
+        "sysinfo.h": "c",
+        "types.h": "c",
+        "sched.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "enabled"
+}
