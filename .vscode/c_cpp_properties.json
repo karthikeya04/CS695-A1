@@ -4,8 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/src/linux-headers-6.1.0-17-amd64/include/",
-                "/usr/src/linux-headers-6.1.0-17-common/include/",
+                "/usr/src/linux-headers-6.1.0-17-amd64/include/**",
+                "/usr/src/linux-headers-6.1.0-17-common/include/**",
                 "/usr/src/linux-headers-6.1.0-17-common/include/uapi/",
                 "/usr/src/linux-headers-6.1.0-17-amd64/arch/x86/include/",
                 "/usr/lib/gcc/x86_64-linux-gnu/12/include/",
