@@ -1,0 +1,4 @@
+EXTRA_CFLAGS = -Wall -g
+
+obj-m += mem_ops_ioctl.o
+
