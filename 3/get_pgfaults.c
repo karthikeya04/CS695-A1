@@ -23,13 +23,7 @@ int hello_proc_release(struct inode *sp_inode, struct file *sp_file)
     return 0;
 }
 
-static unsigned long get_pgfaults(void)
-{
-    unsigned long ev[NR_VM_EVENT_ITEMS];
-    all_vm_events(ev);
-    return ev[PGFAULT];
-}
-
+// helper function to convert a long integer to char*
 static char* convert_to_string(unsigned long n)
 {
     int len = 0, temp = n, idx;
@@ -45,6 +39,16 @@ static char* convert_to_string(unsigned long n)
     return ret;
 }
 
+// returns the total count of page faults the operating system has encountered since it booted
+static unsigned long get_pgfaults(void)
+{
+    unsigned long ev[NR_VM_EVENT_ITEMS];
+    all_vm_events(ev);
+    return ev[PGFAULT];
+}
+
+// called when a read operation is performed on /proc/get_pgfaults
+// NOTE: This function could be called multiple times
 static ssize_t get_pgfaults_read(struct file *file_pointer, char __user *buffer, 
                              size_t buffer_length, loff_t *offset) 
 { 

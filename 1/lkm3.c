@@ -30,6 +30,7 @@ static int init_fn(void)
 
     printk(KERN_INFO "Loading Module...\n");
 
+    // find the task_struct of the process pid
     for_each_process(task)
     {
         if(task->pid == pid)
@@ -48,6 +49,7 @@ static int init_fn(void)
         return 0;
     }
 
+    // walk the page table to get the physical address
     pgdp = pgd_offset(mm, va);
 	pgd = READ_ONCE(*pgdp);
 

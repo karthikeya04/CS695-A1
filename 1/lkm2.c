@@ -12,12 +12,20 @@ static int init_fn(void)
     struct task_struct *task, *parent;
 
     printk(KERN_INFO "Loading Module...\n");
+
+    // find the task_struct of the process pid
     for_each_process(task)
     {
         if(task->pid == pid)
             break;
     }
+    if(!task)
+    {
+        printk(KERN_INFO "Process with PID %d not found\n", pid);
+        return -ESRCH;
+    }
     parent = task;
+
     printk(KERN_INFO "Printing children of PID: [%d]...\n", pid);
     list_for_each_entry(task, &parent->children, sibling)
     {

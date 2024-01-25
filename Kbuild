@@ -1,7 +1,0 @@
-EXTRA_CFLAGS = -Wall -g
-
-obj-m += lkm1.o
-obj-m += lkm2.o
-obj-m += lkm3.o
-obj-m += lkm4.o
-

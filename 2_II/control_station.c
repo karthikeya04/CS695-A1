@@ -14,7 +14,7 @@ void sigchld_handler(int sig) {
         perror("wait");
         exit(1);
     }
-    printf("Soldier process %u terminated\n", soldier_pid);
+    printf("[Constrol Station] Soldier process %u terminated\n", soldier_pid);
 }
 
 
@@ -29,7 +29,7 @@ int main() {
     }
 
     
-    printf("Control station process %u started\n", getpid());
+    printf("[Constrol Station] Control station process %u started\n", getpid());
 
     while (1) {
         sleep(1);

@@ -1,17 +1,22 @@
 #!/bin/bash
 
+# compile ioctl driver and the test program
 make
-gcc test_prog.c -o test_prog
 
+# load the device
 insmod mem_ops_ioctl.ko
 
 printf "\n\n=====================  APPLICATION OUTPUT  =====================\n\n"
+
+# execute user space application
 ./test_prog
+
 printf "\n=================================================================\n\n"
 
-rmmod mem_ops_ioctl.ko
+# remove the device
+rmmod mem_ops_ioctl
 
-rm test_prog
+# clean
 make clean
 
 

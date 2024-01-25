@@ -19,6 +19,9 @@ int hello_proc_release(struct inode *sp_inode, struct file *sp_file)
     printk("proc called release\n");
     return 0;
 }
+
+// called when a read operation is performed on /proc/hello_procfs
+// NOTE: This function could be called multiple times
 static ssize_t hello_procfs_read(struct file *file_pointer, char __user *buffer, 
                              size_t buffer_length, loff_t *offset) 
 { 
@@ -54,7 +57,7 @@ static int __init procfs1_init(void)
         proc_remove(our_proc_file); 
         pr_alert("Error:Could not initialize /proc/%s\n", procfs_name); 
         return -ENOMEM; 
-    } 
+    }
  
     printk(KERN_INFO "/proc/%s created\n", procfs_name); 
     return 0; 

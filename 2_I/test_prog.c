@@ -10,31 +10,47 @@
 
 void test(int fd)
 {
+    printf("[OP] Allocating 1 byte of memory on the heap...\n");
+    // allocate byte-size memory on the heap
     char *ptr = malloc(sizeof(char));
+
+    // assign value 6 to the memory
     *ptr = 6;
-    printf("VA is %lu and the value is %d\n", (unsigned long) ptr,(int) *ptr);
+    printf("[INFO] ptr of type char* points to the allocated memory\n");
+
+    // prints the address (virtual address) and the value of the allocated memory
+    printf("[INFO] VA (i.e the value of ptr) is %lu\n", (unsigned long) ptr);
+    printf("[INFO] The value of (*ptr) is %d\n", (int) *ptr);
+
+    // setting up the argument for ioctl call
     addr_mapping am;
     am.va = (unsigned long) ptr;
+    printf("[OP] Making an ioctl call to get the physical address...\n");
 
-    printf("Making an ioctl call to get the physical address....\n");
+    // Make an ioctl call to get the physical address of the allocated memory
     if (ioctl(fd, FILL_PA, &am) == -1)
     {
         perror("mem_ops ioctl_1");
         return;
     }
-    printf("PA is %lu\n", am.pa);
+    printf("[INFO] PA received from the ioctl call is %lu\n", am.pa);
 
+    // setting up the argument for ioctl call
     mem_data md = { 
-        .pa = am.pa,
-        .value = 5
+        .pa = am.pa, // physical address
+        .value = 5 // new value
     };
-    printf("Making an ioctl call to update the value to 5 using PA....\n");
-    if (ioctl(fd, WRITE_TO_PA, &md) == -1)
+    printf("[OP] Making an ioctl call to update the value to 5 using PA...\n");
+
+    // Make another ioctl call to change the value of the memory to 5 using physical address
+    if (ioctl(fd, WRITE_AT_PA, &md) == -1)
     {
         perror("mem_ops ioctl_1");
         return;
     }
-    printf("Modified value is %d\n", (int) *ptr);
+
+    // check if the value is modified to 5 using the user-space virtual address
+    printf("[INFO] The value of (*ptr) is %d\n", (int) *ptr);
 }
 
 int main(int argc, char *argv[])

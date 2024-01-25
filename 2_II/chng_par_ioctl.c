@@ -29,15 +29,19 @@ static struct class *cl;
 #define UL_PTR (unsigned long *)
 #define UL_SIZE sizeof(unsigned long)
  
+// device's open routine
 static int my_open(struct inode *i, struct file *f)
 {
     return 0;
 }
+
+// device's close routing
 static int my_close(struct inode *i, struct file *f)
 {
     return 0;
 }
 
+// The ioctl function implementation
 static long my_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
 {
     int pid;
@@ -49,6 +53,7 @@ static long my_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
             {
                 return -EFAULT;
             }
+            // find the task_struct corresponding to pid
             for_each_process(task)
             {
                 if(task->pid == pid)
@@ -64,7 +69,15 @@ static long my_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
             // change the parent of the current process
             current->real_parent = new_parent;
             current->parent = new_parent;
+
+            // remove the current process from the old parent's children linked list
             list_del(&current->sibling);
+
+            // add current process to the new parent's linked children list
+            // NOTE: head of the linked list (i.e new_parent->children)
+            // points to the sibling field of the first child and all the children
+            // are connected through the sibling field and the last child sibling field is
+            // connected back to the head
             list_add(&current->sibling,&new_parent->children);
 
             printk(KERN_INFO "Parent of process %d changed to %d\n", current->pid, new_parent->pid);

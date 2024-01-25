@@ -28,15 +28,19 @@ static struct class *cl;
 #define UL_PTR (unsigned long *)
 #define UL_SIZE sizeof(unsigned long)
  
+// device's open routine
 static int my_open(struct inode *i, struct file *f)
 {
     return 0;
 }
+
+// device's close routine
 static int my_close(struct inode *i, struct file *f)
 {
     return 0;
 }
 
+// translates given virtual address to physical address by performing a page walk
 static unsigned long get_pa(int pid, unsigned long va)
 {
     struct task_struct *task;
@@ -108,30 +112,40 @@ static unsigned long get_pa(int pid, unsigned long va)
     return 0;
 }
 
+// The ioctl function implementation
 static long my_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
 {
     switch (cmd)
     {
         case FILL_PA:
             unsigned long va, pa;
+            // copy va from the arg struct in the user space
             if (copy_from_user(&va, UL_PTR(arg + offsetof(addr_mapping, va)), UL_SIZE))
             {
                 return -EACCES;
             }
+            // va to pa translation
             pa = get_pa(current->pid, va);
+
+            // copy the result to arg struct in the user space
             if (copy_to_user(UL_PTR(arg + offsetof(addr_mapping, pa)), &pa, UL_SIZE))
             {
                 return -EACCES;
             }
             break;
-        case WRITE_TO_PA:
+        case WRITE_AT_PA:
+            // value to be written
             mem_data md;
             char* kernel_ptr;
             if (copy_from_user(&md, (mem_data *)arg, sizeof(mem_data)))
             {
                 return -EACCES;
             }
+
+            // get the kernel virtual address corresponding to the given physical address
             kernel_ptr = phys_to_virt(md.pa);
+
+            // since we are in kernel, this effectively updates the value at physical address md.pa
             *kernel_ptr = md.value;
             break;
         default:

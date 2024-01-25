@@ -14,11 +14,13 @@
 
 static int pid = 0;
 
+// returns the size of the virtual address space
 static unsigned long get_virt_size(struct mm_struct *mm)
 {
     // reference : https://elixir.bootlin.com/linux/v6.1/source/arch/parisc/kernel/cache.c#L662
     struct vm_area_struct *vma;
     unsigned long virt_size = 0;
+    // traverse through all the vmas to find the total size of the virtual address space
     VMA_ITERATOR(vmi, mm, 0);
     for_each_vma(vmi, vma) {
         virt_size += vma->vm_end - vma->vm_start;
@@ -26,6 +28,7 @@ static unsigned long get_virt_size(struct mm_struct *mm)
     return virt_size;
 }
 
+// returns true if there exists a physical page mapped to the given virtual address (va)
 bool mapping_exist(struct mm_struct *mm, unsigned long va)
 {
     pgd_t *pgdp, pgd;
@@ -71,8 +74,11 @@ static unsigned long get_phys_size(struct mm_struct *mm)
     unsigned long vmpage;
     VMA_ITERATOR(vmi, mm, 0);
     for_each_vma(vmi, vma) {
+        // iterate through all the pages in the current vma
+        // NOTE: memory in a single vma is contigous
         for(vmpage = vma->vm_start; vmpage < vma->vm_end; vmpage += PAGE_SIZE)
         {
+            // check if the mapping exist
             if(mapping_exist(mm, vmpage))
                 phys_size += PAGE_SIZE;
         }

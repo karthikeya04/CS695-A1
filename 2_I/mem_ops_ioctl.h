@@ -13,8 +13,11 @@ typedef struct
     char value;
 } mem_data;
 
+// command to get the physical address for a virtual address
 #define FILL_PA _IOWR('q', 1, addr_mapping *)
-#define WRITE_TO_PA _IOW('q', 2, mem_data *)
+
+// command to write the given value at the given physical address
+#define WRITE_AT_PA _IOW('q', 2, mem_data *)
 
 #define DEVICE_FILE_NAME "/dev/mem_ops"
 
