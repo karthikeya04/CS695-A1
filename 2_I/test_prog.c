@@ -46,6 +46,9 @@ int main(int argc, char *argv[])
         return 2;
     }
     test(fd);
-    close(fd);
+
+    if (close(fd) == -1) {
+        perror("ERROR: could not close driver");
+    }
 }
 

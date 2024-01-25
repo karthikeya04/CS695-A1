@@ -1,0 +1,4 @@
+EXTRA_CFLAGS = -Wall -g
+
+obj-m += chng_par_ioctl.o
+

@@ -12,7 +12,7 @@
 #include <sys/ioctl.h>
 
 // Include header or define the IOCTL call interface and devide name
-
+#include "chng_par_ioctl.h"
 
 //**************************************************
 
@@ -34,7 +34,6 @@ void close_driver(const char* driver_name, int fd_driver) {
     }
 }
 
-
 int main(int argc, char** argv) {
 
     if (argc != 2) {
@@ -46,12 +45,17 @@ int main(int argc, char** argv) {
 
 
     // open ioctl driver
-    
-    
-    // call ioctl with parent pid as argument to change the parent
+    int fd = open_driver(DEVICE_FILE_NAME);
 
+    // call ioctl with parent pid as argument to change the parent
+    if (ioctl(fd, IOCTL_CHNG_PAR, &parent_pid) == -1)
+    {
+        perror("chng_par ioctl_1");
+        return 2;
+    }
 	
     // close ioctl driver
+    close_driver(DEVICE_FILE_NAME, fd);
 
 	return EXIT_SUCCESS;
 }

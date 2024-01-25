@@ -52,8 +52,6 @@ static unsigned long get_pa(int pid, unsigned long va)
     phys_addr_t paddr, page_addr;
     unsigned long page_offset = 0;
 
-    printk(KERN_INFO "Loading Module...\n");
-
     for_each_process(task)
     {
         if(task->pid == pid)
